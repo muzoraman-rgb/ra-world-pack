@@ -15,8 +15,8 @@ function Install-RaWorld {
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-    $FilesUrl    = 'https://github.com/muzoraman-rgb/ra-world-pack/releases/download/v1.0.0/ra-world-files.zip'
-    $FilesSha512 = 'cdcb2911041b05a6510712df8b4924666ca1a555a7de7bda5df0237c93f2d248f3a969d5d05cf6bb49ee171af5314e83a18582bed05b87ff4da1e0a15bbd4208'
+    $FilesUrl    = 'https://github.com/muzoraman-rgb/ra-world-pack/releases/download/v1.1.0/ra-world-files.zip'
+    $FilesSha512 = '3332b9b80d5282dfb99de0d01c9e7a3f9147423f83b9853c759d30ff028df8182ae9bcdc3e8ed3e2ccb8c2ae3d1d48ddc69fb88a67e9ab0d26717686ab956a85'
     $McVersion   = '26.3'
     $Loader      = '0.20.1'
     $VersionId   = "fabric-loader-$Loader-$McVersion"
@@ -83,9 +83,9 @@ function Install-RaWorld {
 
     # 3. Pack files (mod list, settings, Ra's own mod)
     $stage = Join-Path $Game '.ra-world'
-    $zip   = Join-Path $stage 'ra-world-files-v1.0.0.zip'
+    $zip   = Join-Path $stage 'ra-world-files-v1.1.0.zip'
     Save-Url $FilesUrl $zip $FilesSha512 | Out-Null
-    $files = Join-Path $stage 'files-v1.0.0'
+    $files = Join-Path $stage 'files-v1.1.0'
     if (-not (Test-Path -LiteralPath $files)) { Expand-Archive -LiteralPath $zip -DestinationPath $files }
     $index = Get-Content -LiteralPath (Join-Path $files 'modrinth.index.json') -Raw | ConvertFrom-Json
 
@@ -98,8 +98,15 @@ function Install-RaWorld {
         if ($r -eq 'new') { $new++; Say "  + $($f.path)" } else { $have++ }
     }
     Say "Mods and packs: $new downloaded, $have already there (all SHA-512 checked)" 'Green'
-    $raMod = Join-Path $Game 'mods\ra-shortcuts-1.0.0.jar'
-    if (-not (Test-Path -LiteralPath $raMod)) { Copy-Item -LiteralPath (Join-Path $files 'mods\ra-shortcuts-1.0.0.jar') -Destination $raMod }
+    $raMod = Join-Path $Game 'mods\ra-shortcuts-1.5.0.jar'
+    if (-not (Test-Path -LiteralPath $raMod)) {
+        # an older copy of Ra's mod would load twice: move it aside (renamed, not deleted)
+        Get-ChildItem -LiteralPath (Join-Path $Game 'mods') -Filter 'ra-shortcuts-*.jar' -ErrorAction SilentlyContinue | ForEach-Object {
+            Rename-Item -LiteralPath $_.FullName -NewName ($_.Name + ".old-$Stamp")
+            Say "  old $($_.Name) moved aside" 'Yellow'
+        }
+        Copy-Item -LiteralPath (Join-Path $files 'mods\ra-shortcuts-1.5.0.jar') -Destination $raMod
+    }
 
     # 5. Ra's private files (not allowed to be posted publicly): copy them in if Ra sent them
     $searchDirs = @((Join-Path $env:USERPROFILE 'Downloads'), [Environment]::GetFolderPath('Desktop')) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }

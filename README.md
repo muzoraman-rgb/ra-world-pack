@@ -81,4 +81,4 @@ All mods and packs are downloaded from their official Modrinth pages, under thei
 
 Shader fallback: [Complementary Unbound](https://www.complementary.dev/) by Complementary Development, downloaded unmodified from [Modrinth](https://modrinth.com/shader/complementary-unbound); only a settings file is included here.
 
-`files/mods/ra-shortcuts-1.0.0.jar` is Ra's own small mod (`/xmap`, `/mini` shortcuts for SeedMapper).
+`files/mods/ra-shortcuts-1.5.0.jar` is Ra's own small mod (`/xmap`, `/mini` shortcuts, click-an-icon popup, waypoints and objectives on the seed map).
