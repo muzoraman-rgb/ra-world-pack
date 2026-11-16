@@ -1,0 +1,2 @@
+resourcePacks:["vanilla","file/Musgo-6.5.zip","file/RaFoliage.zip","file/Better Lanterns v1.4.0 - 26.2+26.3.zip","file/FreshAnimations_v1.11.2_26.1+.zip","file/FA+Emissive-v1.7.zip","file/Enchantment Glows v1.12.1.zip"]
+incompatibleResourcePacks:[]
